@@ -8,6 +8,7 @@ class LoanBase(BaseModel):
     loan_amount: float = Field(..., gt=0)
     purpose: str = Field(..., min_length=5, max_length=255)
     monthly_income: float = Field(..., gt=0)
+    yearly_income: float = Field(..., gt=0)
     employment_type: str = Field(..., pattern="^(Full-Time|Part-Time|Self-Employed|Unemployed)$")
     loan_duration: int = Field(..., gt=0, le=360)  # max 30 years in months
 

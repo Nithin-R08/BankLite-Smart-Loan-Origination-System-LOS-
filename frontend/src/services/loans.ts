@@ -5,6 +5,7 @@ export interface ApplyLoanData {
   loan_amount: number;
   purpose: string;
   monthly_income: number;
+  yearly_income: number;
   employment_type: string;
   loan_duration: number;
 }

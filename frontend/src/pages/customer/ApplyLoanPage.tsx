@@ -12,6 +12,7 @@ const loanFormSchema = z.object({
   loan_amount: z.number().min(500, "Minimum loan amount is ₹500").max(10000000, "Maximum loan amount is ₹10,000,000"),
   purpose: z.string().min(5, "Purpose description must be at least 5 characters").max(255),
   monthly_income: z.number().min(100, "Monthly income must be at least ₹100"),
+  yearly_income: z.number().min(1200, "Yearly income must be at least ₹1,200"),
   employment_type: z.enum(["Full-Time", "Part-Time", "Self-Employed", "Unemployed"]),
   loan_duration: z.number().min(6, "Minimum duration is 6 months").max(360, "Maximum duration is 360 months (30 years)"),
   notes: z.string().max(1000).optional(),
@@ -28,6 +29,7 @@ export const ApplyLoanPage: React.FC = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoanFormValues>({
     resolver: zodResolver(loanFormSchema),
@@ -35,6 +37,7 @@ export const ApplyLoanPage: React.FC = () => {
       loan_amount: 10000,
       purpose: "Home Refinancing",
       monthly_income: 5000,
+      yearly_income: 60000,
       employment_type: "Full-Time",
       loan_duration: 36,
       notes: "",
@@ -58,6 +61,7 @@ export const ApplyLoanPage: React.FC = () => {
         loan_amount: pendingValues.loan_amount,
         purpose: pendingValues.purpose,
         monthly_income: pendingValues.monthly_income,
+        yearly_income: pendingValues.yearly_income,
         employment_type: pendingValues.employment_type,
         loan_duration: pendingValues.loan_duration,
       });
@@ -111,6 +115,36 @@ export const ApplyLoanPage: React.FC = () => {
               )}
             </div>
 
+            {/* Yearly Income */}
+            <div className="space-y-1.5">
+              <label htmlFor="yearly_income" className="text-xs font-bold text-slate-500 uppercase">
+                Verified Yearly Income (₹)
+              </label>
+              <div className="relative">
+                <IndianRupee className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  id="yearly_income"
+                  type="number"
+                  {...register("yearly_income", { 
+                    valueAsNumber: true,
+                    onChange: (e) => {
+                      const val = parseFloat(e.target.value);
+                      if (!isNaN(val)) {
+                        setValue("monthly_income", Math.round(val / 12));
+                      }
+                    }
+                  })}
+                  placeholder="e.g. 72000"
+                  className={`w-full rounded-lg border px-10 py-2.5 text-sm outline-none transition-all ${
+                    errors.yearly_income ? "border-red-300 focus:border-red-650" : "border-slate-300 focus:border-indigo-650"
+                  }`}
+                />
+              </div>
+              {errors.yearly_income && (
+                <p className="text-xs font-semibold text-red-600">{errors.yearly_income.message}</p>
+              )}
+            </div>
+
             {/* Monthly Income */}
             <div className="space-y-1.5">
               <label htmlFor="monthly_income" className="text-xs font-bold text-slate-500 uppercase">
@@ -121,10 +155,18 @@ export const ApplyLoanPage: React.FC = () => {
                 <input
                   id="monthly_income"
                   type="number"
-                  {...register("monthly_income", { valueAsNumber: true })}
+                  {...register("monthly_income", { 
+                    valueAsNumber: true,
+                    onChange: (e) => {
+                      const val = parseFloat(e.target.value);
+                      if (!isNaN(val)) {
+                        setValue("yearly_income", val * 12);
+                      }
+                    }
+                  })}
                   placeholder="e.g. 6000"
                   className={`w-full rounded-lg border px-10 py-2.5 text-sm outline-none transition-all ${
-                    errors.monthly_income ? "border-red-300 focus:border-red-600" : "border-slate-300 focus:border-indigo-600"
+                    errors.monthly_income ? "border-red-300 focus:border-red-650" : "border-slate-300 focus:border-indigo-650"
                   }`}
                 />
               </div>

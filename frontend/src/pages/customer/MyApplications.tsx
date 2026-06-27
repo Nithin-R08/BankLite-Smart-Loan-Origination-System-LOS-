@@ -260,10 +260,16 @@ export const MyApplications: React.FC = () => {
                   <p className="font-semibold text-slate-800 mt-0.5">₹{selectedLoan.monthly_income.toLocaleString()}/mo</p>
                 </div>
                 <div>
+                  <p className="font-bold text-slate-400 uppercase">Yearly Declarations</p>
+                  <p className="font-semibold text-slate-800 mt-0.5">
+                    ₹{(selectedLoan.yearly_income || selectedLoan.monthly_income * 12).toLocaleString()}/yr
+                  </p>
+                </div>
+                <div>
                   <p className="font-bold text-slate-400 uppercase">Amortization Period</p>
                   <p className="font-semibold text-slate-800 mt-0.5">{selectedLoan.loan_duration} Months</p>
                 </div>
-                <div>
+                <div className="col-span-2">
                   <p className="font-bold text-slate-400 uppercase">Submission Timestamp</p>
                   <p className="font-semibold text-slate-850 mt-0.5">{new Date(selectedLoan.created_at).toLocaleString()}</p>
                 </div>

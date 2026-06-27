@@ -13,6 +13,7 @@ class LoanService:
     @staticmethod
     def calculate_credit_score(
         monthly_income: float,
+        yearly_income: float,
         employment_type: str,
         loan_amount: float,
         loan_duration: int
@@ -31,7 +32,6 @@ class LoanService:
             score += 50
             
         # 2. Yearly income points
-        yearly_income = monthly_income * 12
         if yearly_income >= 1200000:  # >= 12L
             score += 300
         elif yearly_income >= 600000:  # >= 6L
@@ -72,6 +72,7 @@ class LoanService:
         # Calculate credit score based on applicant inputs
         credit_score = LoanService.calculate_credit_score(
             monthly_income=loan_in.monthly_income,
+            yearly_income=loan_in.yearly_income,
             employment_type=loan_in.employment_type,
             loan_amount=loan_in.loan_amount,
             loan_duration=loan_in.loan_duration
@@ -82,6 +83,7 @@ class LoanService:
             loan_amount=loan_in.loan_amount,
             purpose=loan_in.purpose,
             monthly_income=loan_in.monthly_income,
+            yearly_income=loan_in.yearly_income,
             employment_type=loan_in.employment_type,
             loan_duration=loan_in.loan_duration,
             credit_score=credit_score,

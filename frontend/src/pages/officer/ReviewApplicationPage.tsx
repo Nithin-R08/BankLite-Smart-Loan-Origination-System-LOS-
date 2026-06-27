@@ -365,6 +365,12 @@ export const ReviewApplicationPage: React.FC = () => {
                   <p className="font-semibold text-slate-800 mt-0.5">₹{selectedApp.monthly_income.toLocaleString()}</p>
                 </div>
                 <div>
+                  <p className="font-bold text-slate-450 uppercase">Declared Yearly</p>
+                  <p className="font-semibold text-slate-800 mt-0.5">
+                    ₹{(selectedApp.yearly_income || selectedApp.monthly_income * 12).toLocaleString()}
+                  </p>
+                </div>
+                <div>
                   <p className="font-bold text-slate-450 uppercase">Employment Status</p>
                   <p className="font-semibold text-slate-800 mt-0.5">{selectedApp.employment_type}</p>
                 </div>
@@ -372,7 +378,7 @@ export const ReviewApplicationPage: React.FC = () => {
                   <p className="font-bold text-slate-450 uppercase">Amortization Period</p>
                   <p className="font-semibold text-slate-800 mt-0.5">{selectedApp.loan_duration} Months</p>
                 </div>
-                <div>
+                <div className="col-span-2">
                   <p className="font-bold text-slate-450 uppercase">Payment Estimate</p>
                   <p className="font-semibold text-slate-800 mt-0.5">₹{dti.monthlyPayment.toLocaleString()}/mo</p>
                 </div>

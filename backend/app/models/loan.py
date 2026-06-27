@@ -11,6 +11,7 @@ class LoanApplication(Base):
     loan_amount = Column(Float, nullable=False)
     purpose = Column(String(255), nullable=False)
     monthly_income = Column(Float, nullable=False)
+    yearly_income = Column(Float, nullable=False)
     employment_type = Column(String(50), nullable=False)
     loan_duration = Column(Integer, nullable=False)  # in months
     credit_score = Column(Integer, nullable=False)
