@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -20,9 +20,13 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export const Register: React.FC = () => {
   const navigate = useNavigate();
   const { register: registerAuth } = useAuth();
+  const [searchParams] = useSearchParams();
   
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  const roleParam = searchParams.get("role");
+  const defaultRole = roleParam === "Officer" ? "Officer" : "Customer";
 
   const {
     register,
@@ -35,7 +39,7 @@ export const Register: React.FC = () => {
       email: "",
       phone: "",
       password: "",
-      role: "Customer",
+      role: defaultRole,
     },
   });
 

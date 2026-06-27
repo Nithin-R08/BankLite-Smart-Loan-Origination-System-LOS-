@@ -188,11 +188,18 @@ export const Login: React.FC = () => {
 
       {/* Footer redirection links */}
       <div className="border-t border-slate-100 pt-4 text-center space-y-2">
-        {role === "Customer" && (
+        {role === "Customer" ? (
           <p className="text-xs text-slate-500 font-medium">
             New applicant?{" "}
-            <Link to="/register" className="font-bold text-indigo-600 hover:text-indigo-700">
+            <Link to="/register?role=Customer" className="font-bold text-indigo-600 hover:text-indigo-700">
               Create an Account
+            </Link>
+          </p>
+        ) : (
+          <p className="text-xs text-slate-500 font-medium">
+            New staff member?{" "}
+            <Link to="/register?role=Officer" className="font-bold text-indigo-600 hover:text-indigo-700">
+              Register Credentials
             </Link>
           </p>
         )}
