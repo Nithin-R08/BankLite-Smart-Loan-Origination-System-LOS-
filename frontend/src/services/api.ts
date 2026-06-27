@@ -12,7 +12,7 @@ const api = axios.create({
 // Request interceptor to inject authorization token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("banklite_token");
+    const token = sessionStorage.getItem("banklite_token");
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -36,8 +36,8 @@ api.interceptors.response.use(
     if (error.response) {
       // Token expired or invalid
       if (error.response.status === 401) {
-        localStorage.removeItem("banklite_token");
-        localStorage.removeItem("banklite_role");
+        sessionStorage.removeItem("banklite_token");
+        sessionStorage.removeItem("banklite_role");
         // We can let the AuthContext handle redirection if needed
       }
       

@@ -20,8 +20,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem("banklite_token"));
-  const [role, setRole] = useState<UserRole | null>(localStorage.getItem("banklite_role") as UserRole);
+  const [token, setToken] = useState<string | null>(sessionStorage.getItem("banklite_token"));
+  const [role, setRole] = useState<UserRole | null>(sessionStorage.getItem("banklite_role") as UserRole);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const refreshUser = async () => {
@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (res.success && res.data) {
         setUser(res.data);
         setRole(res.data.role);
-        localStorage.setItem("banklite_role", res.data.role);
+        sessionStorage.setItem("banklite_role", res.data.role);
       } else {
         logout();
       }
@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const storedToken = localStorage.getItem("banklite_token");
+      const storedToken = sessionStorage.getItem("banklite_token");
       if (storedToken) {
         setToken(storedToken);
         await refreshUser();
@@ -61,50 +61,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [token, user]);
 
-  // Sync authentication state across multiple browser tabs
-  useEffect(() => {
-    const handleStorageChange = async (e: StorageEvent) => {
-      if (e.key === "banklite_token" || e.key === "banklite_role") {
-        const newToken = localStorage.getItem("banklite_token");
-        const newRole = localStorage.getItem("banklite_role") as UserRole;
-        
-        if (!newToken) {
-          setToken(null);
-          setUser(null);
-          setRole(null);
-          setIsLoading(false);
-        } else {
-          setToken(newToken);
-          setRole(newRole);
-          try {
-            const res = await authService.getMe();
-            if (res.success && res.data) {
-              setUser(res.data);
-              setRole(res.data.role);
-            } else {
-              logout();
-            }
-          } catch {
-            logout();
-          }
-        }
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
   const login = async (data: LoginData) => {
     setIsLoading(true);
     try {
       const res = await authService.login(data);
       if (res.success && res.data) {
         const { access_token, role: userRole } = res.data;
-        localStorage.setItem("banklite_token", access_token);
-        localStorage.setItem("banklite_role", userRole);
+        sessionStorage.setItem("banklite_token", access_token);
+        sessionStorage.setItem("banklite_role", userRole);
         setToken(access_token);
         setRole(userRole);
         
@@ -135,8 +99,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    localStorage.removeItem("banklite_token");
-    localStorage.removeItem("banklite_role");
+    sessionStorage.removeItem("banklite_token");
+    sessionStorage.removeItem("banklite_role");
     setToken(null);
     setUser(null);
     setRole(null);
