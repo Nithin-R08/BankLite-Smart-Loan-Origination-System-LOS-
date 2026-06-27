@@ -1,0 +1,36 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+venv/
+.venv/
+env/
+.env/
+
+# Backend specific
+backend/venv/
+backend/.env
+backend/banklite.db
+backend/instance/
+backend/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+# Frontend build outputs
+dist/
+build/
+frontend/dist/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
