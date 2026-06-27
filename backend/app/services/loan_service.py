@@ -11,9 +11,71 @@ from app.services.audit_service import AuditService
 
 class LoanService:
     @staticmethod
+    def calculate_credit_score(
+        monthly_income: float,
+        employment_type: str,
+        loan_amount: float,
+        loan_duration: int
+    ) -> int:
+        # Base credit score starts at 300
+        score = 300
+        
+        # 1. Employment type points
+        if employment_type == "Full-Time":
+            score += 250
+        elif employment_type == "Self-Employed":
+            score += 200
+        elif employment_type == "Part-Time":
+            score += 150
+        else:  # Unemployed
+            score += 50
+            
+        # 2. Yearly income points
+        yearly_income = monthly_income * 12
+        if yearly_income >= 1200000:  # >= 12L
+            score += 300
+        elif yearly_income >= 600000:  # >= 6L
+            score += 250
+        elif yearly_income >= 300000:  # >= 3L
+            score += 180
+        elif yearly_income >= 150000:  # >= 1.5L
+            score += 120
+        else:
+            score += 50
+            
+        # 3. Monthly loan payment to monthly income ratio points
+        if loan_duration <= 0:
+            loan_duration = 1
+        monthly_payment = loan_amount / loan_duration
+        
+        if monthly_income <= 0:
+            payment_to_income = 1.0
+        else:
+            payment_to_income = monthly_payment / monthly_income
+            
+        if payment_to_income <= 0.10:  # <= 10%
+            score += 300
+        elif payment_to_income <= 0.20:  # <= 20%
+            score += 250
+        elif payment_to_income <= 0.35:  # <= 35%
+            score += 180
+        elif payment_to_income <= 0.50:  # <= 50%
+            score += 100
+        else:
+            score += 20
+            
+        # Cap score between 300 and 850
+        return max(300, min(850, score))
+
+    @staticmethod
     def apply_loan(db: Session, customer_id: int, loan_in: LoanCreate) -> LoanApplication:
-        # Business logic: generate random credit score between 300 and 850
-        credit_score = random.randint(300, 850)
+        # Calculate credit score based on applicant inputs
+        credit_score = LoanService.calculate_credit_score(
+            monthly_income=loan_in.monthly_income,
+            employment_type=loan_in.employment_type,
+            loan_amount=loan_in.loan_amount,
+            loan_duration=loan_in.loan_duration
+        )
         
         db_loan = LoanApplication(
             customer_id=customer_id,
