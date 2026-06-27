@@ -61,6 +61,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [token, user]);
 
+  // Sync authentication state across multiple browser tabs
+  useEffect(() => {
+    const handleStorageChange = async (e: StorageEvent) => {
+      if (e.key === "banklite_token" || e.key === "banklite_role") {
+        const newToken = localStorage.getItem("banklite_token");
+        const newRole = localStorage.getItem("banklite_role") as UserRole;
+        
+        if (!newToken) {
+          setToken(null);
+          setUser(null);
+          setRole(null);
+          setIsLoading(false);
+        } else {
+          setToken(newToken);
+          setRole(newRole);
+          try {
+            const res = await authService.getMe();
+            if (res.success && res.data) {
+              setUser(res.data);
+              setRole(res.data.role);
+            } else {
+              logout();
+            }
+          } catch {
+            logout();
+          }
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
   const login = async (data: LoginData) => {
     setIsLoading(true);
     try {
