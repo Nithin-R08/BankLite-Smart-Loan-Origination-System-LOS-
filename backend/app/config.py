@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api"
     
     # Database
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./banklite.db")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "mysql+pymysql://root:Nithin%402005@localhost:3306/banklite")
     
     # Security
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "banklite-super-secure-secret-key-change-in-prod")
