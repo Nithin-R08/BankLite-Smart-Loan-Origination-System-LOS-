@@ -8,7 +8,7 @@ env/
 
 # Backend specific
 backend/venv/
-backend/.env
+# backend/.env
 backend/banklite.db
 backend/instance/
 backend/__pycache__/
